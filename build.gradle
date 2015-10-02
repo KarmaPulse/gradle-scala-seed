@@ -1,0 +1,42 @@
+buildscript {
+    repositories { 
+        jcenter() 
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+    }
+}
+
+apply plugin: 'scala'
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+// Dependencies control
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.7'
+}
+
+// Project settings
+mainClassName ='main.Main'
+
+// Project special functions
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('dd-MM-yyyy_HHmmss')
+    return formattedDate
+}
+
+// Plugin configurations
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.useAnt = false
+}
+
+shadowJar {
+    manifest {
+        attributes 'Version-Date': getDate()
+    }
+}
